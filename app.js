@@ -6,8 +6,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-mongoose.connect('mongodb+srv://anisras:zbi123@cluster0.ftt0yyi.mongodb.net/HigherGravityStore?retryWrites=true&w=majority&appName=Cluster0')
+const mongoDBUri = process.env.MONGODB_URI;
+mongoose.connect(mongoDBUri)
     .then(() => {
         console.log('Successfully connected');
     })
