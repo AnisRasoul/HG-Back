@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/Auth'); // Import auth routes
+const productRoutes = require('./routes/productRoutes');
 const app = express();
 
 app.use(cors());
@@ -17,6 +18,7 @@ mongoose.connect(mongoDBUri)
 
 // Use auth routes
 app.use('/api/Auth', authRoutes);
+app.use('/api', productRoutes)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
