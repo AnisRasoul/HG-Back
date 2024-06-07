@@ -17,8 +17,8 @@ mongoose.connect(mongoDBUri)
     });
 
 // Use auth routes
-app.use('/api/Auth', authRoutes);
-app.use('/api', productRoutes)
+app.use(authRoutes);
+app.use(productRoutes)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

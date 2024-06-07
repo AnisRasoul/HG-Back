@@ -3,17 +3,18 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userController = require("../controllers/user");
 const User = require('../models/User');
+const { protect, allowedTo } = require("../middlewares/authorization");
 require('dotenv').config();
 
 const router = express.Router();
 
-router.get("/users",userController.getAllUsers);
-router.get("/user/:id",userController.getUser);
-router.delete("/user/:id", userController.deleteUserById);
+router.get("/users",protect,allowedTo('admin'), userController.getAllUsers);
+router.get("/user/:id",protect,allowedTo('admin','user'),userController.getUser);
+router.delete("/user/:id",protect,allowedTo('admin'), userController.deleteUserById);
 router.post("/register", userController.register);
 router.post("/login", userController.login);
-router.put("/user/update/:id", userController.updateUser);
-router.put("/user/updatepw/:id", userController.changeUserPassword);
+router.put("/user/update/:id",protect,allowedTo('admin','user'), userController.updateUser);
+router.put("/user/updatepw/:id",protect,allowedTo('admin','user'), userController.changeUserPassword);
 router.post('/verifyToken', (req, res) => {
     try {
         const token = req.body.token;

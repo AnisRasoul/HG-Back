@@ -40,14 +40,16 @@ exports.register = async (req, res, next) => {
   exports.getAllUsers = async (req, res, next) => {
     try {
       const allUsers = await findAllUser();
-      if (!allUsers) return res.status(400).json({ message: "failed to get users" });
-      const users = [];
-      allUsers.forEach((user) => users.push(user._id));
-      return res.status(200).json(users);
+      if (!allUsers) {
+        return res.status(400).json({ message: "Failed to get users" });
+      }
+  
+      return res.status(200).json(allUsers);
     } catch (err) {
       next(err);
     }
   };
+  
   
   exports.getUser = async (req, res, next) => {
     try {

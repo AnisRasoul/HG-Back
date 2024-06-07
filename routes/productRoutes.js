@@ -1,31 +1,32 @@
 const express = require("express");
 const router = express.Router();
 const productController = require("../controllers/product");
+const { protect, allowedTo } = require("../middlewares/authorization");
 
-
-router.get("/categories", productController.getAllCategories);
-router.get("/products", productController.getAllProducts);
-router.get("/products/:category", productController.getProductsByCategory);
-router.get("/category/:id", productController.getProductsSpecificCategory);
-router.get("/product/:id", productController.getProduct);
+router.get("/categories",protect,allowedTo('admin'), productController.getAllCategories);
+router.get("/products",protect,allowedTo('admin','user'), productController.getAllProducts);
+router.get("/products/:category",protect,allowedTo('admin', 'user'), productController.getProductsByCategory);
+router.get("/category/:id",protect,allowedTo('admin'), productController.getProductsSpecificCategory);
+router.get("/product/:id",protect,allowedTo('admin', 'user'), productController.getProduct);
 router.delete(
-  "/product/:id",
+  "/product/:id"
+  ,protect,allowedTo('admin'),
   productController.deleteProduct
 );
 router.delete(
-  "/category/:id",
+  "/category/:id",protect,allowedTo('admin'),
   productController.deleteCategory
 );
 router.post(
-  "/product/create",
+  "/product/create",protect,allowedTo('admin'),
   productController.createProduct
 );
 router.post(
-  "/category/create",
+  "/category/create",protect,allowedTo('admin'),
   productController.createCategory
 );
 router.put(
-  "/product/:id",
+  "/product/:id",protect,allowedTo('admin'),
   productController.updateProduct
 );
 
