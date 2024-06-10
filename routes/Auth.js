@@ -5,16 +5,16 @@ const userController = require("../controllers/user");
 const User = require('../models/User');
 const { protect, allowedTo } = require("../middlewares/authorization");
 require('dotenv').config();
-
 const router = express.Router();
 
-router.get("/users",protect,allowedTo('admin'), userController.getAllUsers);
+router.get("/users",protect,allowedTo('admin','user'), userController.getAllUsers);
+
 router.get("/user/:id",protect,allowedTo('admin','user'),userController.getUser);
-router.delete("/user/:id",protect,allowedTo('admin'), userController.deleteUserById);
+
 router.post("/register", userController.register);
+
 router.post("/login", userController.login);
-router.put("/user/update/:id",protect,allowedTo('admin','user'), userController.updateUser);
-router.put("/user/updatepw/:id",protect,allowedTo('admin','user'), userController.changeUserPassword);
+
 router.post('/verifyToken', (req, res) => {
     try {
         const token = req.body.token;
@@ -34,5 +34,11 @@ router.post('/verifyToken', (req, res) => {
         res.status(500).json({ message: 'Error verifying token', error });
     }
 });
+
+router.put("/user/update/:id",protect,allowedTo('admin','user'), userController.updateUser);
+
+router.put("/user/updatepw/:id",protect,allowedTo('admin','user'), userController.changeUserPassword);
+
+router.delete("/user/:id",protect,allowedTo('admin'), userController.deleteUserById);
 
 module.exports = router;
