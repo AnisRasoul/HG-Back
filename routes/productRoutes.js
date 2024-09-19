@@ -3,9 +3,8 @@ const router = express.Router();
 const productController = require("../controllers/product");
 const { protect, allowedTo } = require("../middlewares/authorization");
 
-router.get("/categories",protect,allowedTo('admin'), productController.getAllCategories);
 
-router.get("/products",protect,allowedTo('admin','user'), productController.getAllProducts);
+router.get("/products",protect,allowedTo('user', 'admin'), productController.getAllProducts);
 
 router.get("/products/:category",protect,allowedTo('admin', 'user'), productController.getProductsByCategory);
 
