@@ -4,12 +4,13 @@ const {
   createProductFn,
   updateProductFn,
   findAllProducts,
-  findProductById,
   deleteCategoryFn,
   deleteProductFn,
   findCategoryById,
 } = require("../services/product.service");
 const Product = require('../models/Product')
+const cloudinary = require('../util/cloudinary');
+
 exports.createCategory = async (req, res, next) => {
   try {
     const category = await createCategoryFn(req.body);
@@ -93,7 +94,7 @@ exports.getAllProducts = async (req, res, next) => {
 
 exports.getProduct = async (req, res, next) => {
   try {
-    const product = await findProductById(req.params.id);
+    const product = await (req.params.id);
     if (!product)
       return res.status(400).json({ message: "Failed to get product" });
     return res.status(200).json({ message: "Product retrieved successfully", product });
@@ -130,3 +131,29 @@ exports.getProductsSpecificCategory = async (req, res, next) => {
     next(err);
   }
 };
+exports.uploadProductImages = async (req, res) => {
+  try {
+      const files = req.files;  
+      const uploadResults = [];
+
+      for (let i = 0; i < files.length; i++) {
+          const result = await cloudinary.uploader.upload(files[i].path, {
+              transformation: [{ format: 'webp', quality: 'auto' }],
+          });
+          uploadResults.push(result);
+      }
+
+      return res.status(200).json({
+          message: "Images uploaded successfully",
+          uploadResults
+      });
+  } catch (err) {
+      console.error('Error uploading images:', err);
+      return res.status(400).json({
+          message: "Image upload failed",
+          err
+      });
+  }
+};
+
+

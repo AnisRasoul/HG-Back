@@ -35,9 +35,7 @@ exports.updateProductFn = (id,data) => {
 exports.findAllProducts = () => {
     return Product.find()
 }
-exports.findProductById = (id) => {
-    return Product.findbyId(id)
-}
+
 exports.deleteProductFn = (id) => {
     return Product.deleteOne({ _id: id})
 }
