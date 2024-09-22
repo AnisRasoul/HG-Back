@@ -11,11 +11,11 @@ require('dotenv').config(); // Ensure to load environment variables from .env fi
 const app = express();
 
 // CORS configuration
-const allowedOrigins = ['http://localhost:5173', 'https://highergravity.vercel.app']; // Add your allowed origins here
+const allowedOrigins = ['http://localhost:5173', 'https://highergravity.vercel.app'];
 app.use(cors({
   origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the allowed methods
-  credentials: true, // Allow credentials (like cookies) to be sent
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  credentials: true, 
 }));
 
 app.use(express.json());
@@ -37,7 +37,7 @@ mongoose.connect(mongoDBUri)
   .catch((error) => {
     console.error('Error connecting', error);
   });
- // Simple GET request test
+
 app.get('/test', (req, res) => {
   res.json({ message: 'GET request successful!', timestamp: new Date() });
 });
