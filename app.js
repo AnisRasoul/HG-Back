@@ -37,6 +37,11 @@ mongoose.connect(mongoDBUri)
   .catch((error) => {
     console.error('Error connecting', error);
   });
+ // Simple GET request test
+app.get('/test', (req, res) => {
+  res.json({ message: 'GET request successful!', timestamp: new Date() });
+});
+
 
 app.get(
   '/auth/google',
