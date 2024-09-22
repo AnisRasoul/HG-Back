@@ -3,14 +3,21 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/Auth'); // Import auth routes
 const productRoutes = require('./routes/productRoutes');
-const orderRoutes = require('./routes/orderRoutes')
+const orderRoutes = require('./routes/orderRoutes');
 const passport = require('./util/passport'); // Requiring the configured passport
 const session = require('express-session');
 require('dotenv').config(); // Ensure to load environment variables from .env file
 
 const app = express();
 
-app.use(cors());
+// CORS configuration
+const allowedOrigins = ['http://localhost:5173', 'https://highergravity.vercel.app']; // Add your allowed origins here
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the allowed methods
+  credentials: true, // Allow credentials (like cookies) to be sent
+}));
+
 app.use(express.json());
 app.use(
   session({
@@ -55,7 +62,7 @@ app.get(
 
 app.use(authRoutes);
 app.use(productRoutes);
-app.use(orderRoutes)
+app.use(orderRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
