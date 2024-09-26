@@ -20,18 +20,24 @@ const UserSchema = new mongoose.Schema({
         enum: ["user", "admin"],
         default: "user",
       },
-      passwordChangedAt: {
+    passwordChangedAt: {
         type: Date,
         default: Date.now(),
       },
-      address: {
+    address: {
         city: String,
         street: String,
         zipcode: String
       },
-      phone: {
+    phone: {
         type: String,
-      }
+      },
+    orders: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Order",
+        },
+      ],
 });
 
 UserSchema.pre('save', async function (next) {

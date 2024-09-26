@@ -4,7 +4,9 @@ const orderController = require("../controllers/order");
 const { protect, allowedTo } = require("../middlewares/authorization");
 
 
-router.get("/orders",protect,allowedTo('admin','user'), orderController.getAllOrders);
+router.get("/Allorders", protect, allowedTo('admin'), orderController.getAllOrders);
+
+router.get("/userOrders",protect,allowedTo('admin','user'), orderController.getUserOrders);
 
 router.get("/order/:id",protect,allowedTo('admin'), orderController.getOrderById);
 

@@ -7,6 +7,7 @@ const {
   deleteCategoryFn,
   deleteProductFn,
   findCategoryById,
+  findProductById,
 } = require("../services/product.service");
 const Product = require('../models/Product')
 const cloudinary = require('../util/cloudinary');
@@ -56,6 +57,8 @@ exports.createProduct = async (req, res, next) => {
   }
 };
 
+
+
 exports.updateProduct = async (req, res, next) => {
   try {
     const product = await updateProductFn(req.params.id, req.body);
@@ -94,7 +97,7 @@ exports.getAllProducts = async (req, res, next) => {
 
 exports.getProduct = async (req, res, next) => {
   try {
-    const product = await (req.params.id);
+    const product = await findProductById(req.params.id)
     if (!product)
       return res.status(400).json({ message: "Failed to get product" });
     return res.status(200).json({ message: "Product retrieved successfully", product });

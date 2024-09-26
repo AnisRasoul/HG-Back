@@ -1,4 +1,6 @@
 const Order = require('../models/Order');
+const User = require('../models/User'); // Import the User model
+const Product = require('../models/Product');
 
 exports.createOrderFn = (data) => {
     return Order.create({
@@ -11,7 +13,25 @@ exports.createOrderFn = (data) => {
 }
 
 exports.findAll = () => {
-    return Order.find();
+    return Order.find()
+        .populate({
+            path: 'user',
+            model: 'User',
+            select: 'username email' 
+        })  
+        .populate({
+            path: 'products.product',  // Specify the path for nested population
+            model: 'Product',
+            select : 'title category price -_id'        // Reference the Product model
+        });
+};
+exports.findUserOrders = (id) => {
+    return Order.find({ user: id })
+    .populate({
+        path: 'products.product',
+        model: 'Product',
+        select : 'title category price images.front_view -_id created_at'
+    })
 };
 
 exports.updateOrderFn = (id, data) => {

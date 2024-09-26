@@ -1,4 +1,7 @@
-const {findAll, updateOrderFn, findById, findByDate, deleteOrderFn, createOrderFn} = require('../services/order.service')
+
+const Order = require('../models/Order');
+const User = require('../models/User');
+const {findAll, updateOrderFn, findById, deleteOrderFn, createOrderFn, findUserOrders} = require('../services/order.service')
 
 
 exports.createOrder = async (req,res,next) => {
@@ -34,6 +37,17 @@ exports.deleteOrder = async (req,res,next) => {
       } catch (err) {
         next(err);
       }
+}
+
+exports.getUserOrders = async (req,res,next) => {
+    try {
+       const userOrders = await findUserOrders(req.user._id) 
+       if(!userOrders)
+            return res.status(400).json({message:'failed to get orders'});
+        return res.status(200).json(userOrders)
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.getAllOrders = async (req,res,next) => {
