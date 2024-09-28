@@ -24,6 +24,10 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now(),
       },
+    isVerified: {
+        type: Boolean,
+        default: false,
+      },
     address: {
         city: String,
         street: String,
