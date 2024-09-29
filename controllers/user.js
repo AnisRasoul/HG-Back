@@ -12,39 +12,26 @@ exports.register = async (req, res, next) => {
       else if (await findUser({ username }))
           return res.status(400).json({ message: "Username already exists" });
 
-      const user = await createUser({
-          username,
-          email,
-          password,
-          address,
-          phone,
-      });
-
-      if (user) {
-          delete user.password;
-          token = signJwt(user);
-          const verificationUrl = `${process.env.BASE_URL}/verifyMail/${user._id}/${token}`;
+        const token = signJwt({ username, email, password, address, phone });
+          const verificationUrl = `${process.env.BASE_URL}/verifyMail/${token}`;
           const message = `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-              <h2 style="color: #333;">Welcome to HigherGravity, ${user.username}!</h2>
-              <p style="font-size: 16px; color: #555;">
-                Please complete your registration by clicking the button below:
-              </p>
-              <a href="${verificationUrl}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
-                Verify Email
-              </a>
-              <p style="font-size: 14px; color: #999; margin-top: 20px;">
-                If you did not sign up for this account, please ignore this email.
-              </p>
-            </div>
-          `;
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <h2 style="color: #333;">Welcome to HigherGravity, ${username}!</h2>
+        <p style="font-size: 16px; color: #555;">
+          Please complete your registration by clicking the button below:
+        </p>
+        <a href="${verificationUrl}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+          Verify Email
+        </a>
+        <p style="font-size: 14px; color: #999; margin-top: 20px;">
+          If you did not sign up for this account, please ignore this email.
+        </p>
+      </div>
+    `;
           
           // Use 'message' as the HTML content here
-          await sendMail(user.email, 'Email Verification', message);
+          await sendMail(email, 'Email Verification', message);
           return res.status(201).json({ message: "An Email sent to your account please verify" });
-      } else {
-          return res.status(400).json({ message: "Failed to add User" });
-      }
   } catch (err) {
       next(err);
   }
@@ -52,14 +39,17 @@ exports.register = async (req, res, next) => {
 
   exports.verifyMail = async (req, res) => {
     try {
-      const user = await findUser({ _id: req.params.id });
-      if (!user) return res.status(400).send("Invalid link");
+      const tokenData = verifyJwt(req.params.token, process.env.JWT_SECRET);
+      if (!tokenData) return res.status(400).send("Invalid or expired token");
   
-      // Verify the token directly
-      const token = verifyJwt(req.params.token, process.env.JWT_SECRET);
-      if (!token) return res.status(400).send("Invalid or expired token");
-  
-      await updateUser({ _id: user._id }, { isVerified: true });
+      const user = await createUser({
+        username: tokenData.username,
+        email: tokenData.email,
+        password: tokenData.password,
+        address: tokenData.address,
+        phone: tokenData.phone,
+        isVerified: true
+      });
       res.status(200).send(`
         <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f4; font-family: Arial, sans-serif;">
           <div style="text-align: center; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">

@@ -9,7 +9,7 @@ router.get("/users",protect,allowedTo('admin'), userController.getAllUsers);
 
 router.get("/user/:id",protect,allowedTo('admin'),userController.getUser);
  
-router.get("/verifyMail/:id/:token", userController.verifyMail);
+router.get("/verifyMail/:token", userController.verifyMail);
 
 router.post("/register", userController.register);
 
