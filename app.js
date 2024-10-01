@@ -29,7 +29,9 @@ mongoose.connect(mongoDBUri)
   .catch((error) => {
     console.error('Error connecting', error);
   });
-
+app.get('/test', (req, res) => {
+  res.send('Welcome to Higher Gravity');
+});
 app.get(
   '/auth/google',
   passport.authenticate('google', {
