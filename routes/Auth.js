@@ -15,6 +15,8 @@ router.post("/register", userController.register);
 
 router.post("/login", userController.login);
 
+router.get('/currentUser', protect, userController.getCurrentUser);
+
 router.post('/verifyToken', verifyToken);
 
 router.put("/user/update/:id",protect,allowedTo('user'), userController.updateUser);

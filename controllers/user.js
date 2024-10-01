@@ -2,6 +2,7 @@ const { createUser,validatePassword,findAllUser,findUser,deleteUser,updateUser }
 require('dotenv').config
 const { signJwt, verifyJwt } = require("../util/jwt");
 const bcrypt = require("bcrypt");
+const lodash = require("lodash");
 const sendMail = require("../util/nodemailer");
 
 exports.register = async (req, res, next) => {
@@ -82,6 +83,21 @@ exports.register = async (req, res, next) => {
       next(err);
     }
   };
+
+  exports.getCurrentUser = async (req, res) => {
+    try {
+        const user = req.user;
+        
+        const userData = lodash.omit(user.toJSON(), 'password');
+        
+        return res.status(200).json(userData);
+    } catch (error) {
+        console.error('Error fetching current user data:', error);
+        return res.status(500).json({ message: 'Error fetching user data', error });
+    }
+  };
+  
+
   exports.getAllUsers = async (req, res, next) => {
     try {
       const allUsers = await findAllUser();
