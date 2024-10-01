@@ -14,7 +14,7 @@ exports.register = async (req, res, next) => {
           return res.status(400).json({ message: "Username already exists" });
 
         const token = signJwt({ username, email, password, address, phone });
-          const verificationUrl = `${process.env.BASE_URL}/verifyMail/${token}`;
+          const verificationUrl = `https://hg-back.onrender.com/verifyMail/${token}`;
           const message = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
         <h2 style="color: #333;">Welcome to HigherGravity, ${username}!</h2>
