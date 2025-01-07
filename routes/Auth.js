@@ -1,28 +1,47 @@
-const express = require('express');
-const userController = require("../controllers/user");
-const { protect, allowedTo, verifyToken } = require("../middlewares/authorization");
+const express = require("express");
+const userController = require("../controllers/userController");
+const {
+  protect,
+  allowedTo,
+  verifyToken,
+} = require("../middlewares/authorization");
 
-require('dotenv').config();
+require("dotenv").config();
 const router = express.Router();
 
-router.get("/users",protect,allowedTo('admin'), userController.getAllUsers);
+router.get("/users", protect, allowedTo("admin"), userController.getAllUsers);
 
-router.get("/user/:id",protect,allowedTo('admin'),userController.getUser);
- 
+router.get("/user/:id", protect, allowedTo("admin"), userController.getUser);
+
 router.get("/verifyMail/:token", userController.verifyMail);
 
 router.post("/register", userController.register);
 
 router.post("/login", userController.login);
 
-router.get('/currentUser', protect, userController.getCurrentUser);
+router.get("/currentUser", protect, userController.getCurrentUser);
 
-router.post('/verifyToken', verifyToken);
+router.post("/verifyToken", verifyToken);
 
-router.put("/user/update/:id",protect,allowedTo('user'), userController.updateUser);
+router.put(
+  "/user/update/:id",
+  protect,
+  allowedTo("user"),
+  userController.updateUser
+);
 
-router.put("/user/updatepw/:id",protect,allowedTo('user'), userController.changeUserPassword);
+router.put(
+  "/user/updatepw/:id",
+  protect,
+  allowedTo("user"),
+  userController.changeUserPassword
+);
 
-router.delete("/user/:id",protect,allowedTo('admin'), userController.deleteUserById);
+router.delete(
+  "/user/:id",
+  protect,
+  allowedTo("admin"),
+  userController.deleteUserById
+);
 
 module.exports = router;

@@ -1,31 +1,48 @@
 const express = require("express");
 const router = express.Router();
-const orderController = require("../controllers/order");
+const orderController = require("../controllers/orderController");
 const { protect, allowedTo } = require("../middlewares/authorization");
 
+router.get(
+  "/Allorders",
+  protect,
+  allowedTo("admin"),
+  orderController.getAllOrders
+);
 
-router.get("/Allorders", protect, allowedTo('admin'), orderController.getAllOrders);
+router.get(
+  "/userOrders",
+  protect,
+  allowedTo("admin", "user"),
+  orderController.getUserOrders
+);
 
-router.get("/userOrders",protect,allowedTo('admin','user'), orderController.getUserOrders);
+router.get(
+  "/order/:id",
+  protect,
+  allowedTo("admin"),
+  orderController.getOrderById
+);
 
-router.get("/order/:id",protect,allowedTo('admin'), orderController.getOrderById);
+router.post(
+  "/order",
+  protect,
+  allowedTo("admin", "user"),
+  orderController.createOrder
+);
 
-router.post("/order",protect,allowedTo('admin','user'), orderController.createOrder);
+router.put(
+  "/order/:id",
+  protect,
+  allowedTo("admin"),
+  orderController.updateOrder
+);
 
-router.put("/order/:id",protect,allowedTo('admin'), orderController.updateOrder);
-
-router.delete("/order/:id",protect,allowedTo('admin'), orderController.deleteOrder);
-
-
-
-
-
-
-
-
-
-
-
-
+router.delete(
+  "/order/:id",
+  protect,
+  allowedTo("admin"),
+  orderController.deleteOrder
+);
 
 module.exports = router;

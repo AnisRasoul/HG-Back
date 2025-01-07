@@ -1,15 +1,13 @@
 const User = require("../models/User");
 const { verifyJwt } = require("../util/jwt");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.protect = async (req, res, next) => {
   let token;
-  if (
-    req.headers.authorization
-  ) {
+  if (req.headers.authorization) {
     token = req.headers.authorization.split(" ")[1];
   }
   if (!token) {
@@ -33,21 +31,23 @@ exports.verifyToken = async (req, res) => {
   try {
     const token = req.body.token;
     if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
+      return res.status(401).json({ message: "No token provided" });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-            console.error('Failed to authenticate token:', err);
-            return res.status(403).json({ message: 'Failed to authenticate token' });
-        }
-        res.status(200).json({ message: 'Token is valid' });
+    jwt.verify(token, process.env.JWT_SECRET, (err) => {
+      if (err) {
+        console.error("Failed to authenticate token:", err);
+        return res
+          .status(403)
+          .json({ message: "Failed to authenticate token" });
+      }
+      res.status(200).json({ message: "Token is valid" });
     });
-} catch (error) {
-    console.error('Error verifying token:', error);
-    res.status(500).json({ message: 'Error verifying token', error });
-}
-}
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    res.status(500).json({ message: "Error verifying token", error });
+  }
+};
 
 exports.allowedTo =
   (...roles) =>

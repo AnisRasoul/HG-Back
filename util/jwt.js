@@ -9,6 +9,6 @@ exports.signJwt = (payload) => {
   });
 };
 
-exports.verifyJwt = ( token, ACCESS_TOKEN_PRIVATE_KEY ) => {
+exports.verifyJwt = (token, ACCESS_TOKEN_PRIVATE_KEY) => {
   return jwt.verify(token, ACCESS_TOKEN_PRIVATE_KEY);
-}
+};
