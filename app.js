@@ -1,13 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const authRoutes = require("./routes/Auth"); // Import auth routes
+const auth = require("./routes/Auth");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const passport = require("./util/passport"); // Requiring the configured passport
 const session = require("express-session");
-const bodyParserMiddleware = require("./middleware/bodyParserMiddleware"); // Import bodyParserMiddleware
 require("dotenv").config(); // Ensure to load environment variables from .env file
 
 const app = express();
@@ -32,30 +31,12 @@ mongoose
   .catch((error) => {
     console.error("Error connecting", error);
   });
-app.get("/test", (req, res) => {
-  res.send("Welcome to Higher Gravity");
-});
-app.get(
-  "/auth/google",
-  passport.authenticate("google", {
-    scope: ["email", "profile"],
-  })
-);
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: "/", // Redirect to home or login page on failure
-  }),
-  (req, res) => {
-    if (!req.user) {
-      res.status(400).json({ error: "Authentication failed" });
-    }
-    // Return user details
-    res.status(200).json(req.user);
-  }
-);
 
-app.use(authRoutes);
+app.get("/", (req, res) => {
+  res.send("<a href='/oauth'>Login with Google</a>");
+});
+
+app.use(auth);
 app.use(productRoutes);
 app.use(orderRoutes);
 app.use(paymentRoutes);

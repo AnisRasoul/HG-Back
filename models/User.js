@@ -57,4 +57,17 @@ UserSchema.pre("save", async function (next) {
   }
 });
 
+UserSchema.statics.findOrCreate = async function (profile) {
+  let user = await this.findOne({ email: profile.emails[0].value });
+  if (!user) {
+    user = await this.create({
+      username: profile.displayName,
+      email: profile.emails[0].value,
+      password: bcrypt.hashSync(profile.id, 10),
+      isVerified: true,
+    });
+  }
+  return user;
+};
+
 module.exports = mongoose.model("User", UserSchema);

@@ -1,5 +1,6 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const User = require("../models/User"); // Import User model
 
 passport.use(
   new GoogleStrategy(
@@ -10,9 +11,15 @@ passport.use(
       callbackURL: "http://localhost:3000/oauth",
       passReqToCallback: true,
     },
-    (accessToken, refreshToken, profile, done) => {
-      // Here you can handle the authenticated user profile and save it to your database
-      return done(null, profile);
+    async (req, accessToken, refreshToken, profile, done) => {
+      try {
+        const user = await User.findOrCreate(profile);
+        console.log(profile, 'authenticated');
+        
+        return done(null, user);
+      } catch (error) {
+        return done(error, null);
+      }
     }
   )
 );

@@ -23,6 +23,10 @@ router.get("/currentUser", protect, userController.getCurrentUser);
 
 router.post("/verifyToken", verifyToken);
 
+router.get("/oauth", userController.googleGet);
+
+router.get("/google/callback", userController.googleAuthenticate);
+
 router.put(
   "/user/update/:id",
   protect,

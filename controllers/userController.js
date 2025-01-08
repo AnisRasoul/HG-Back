@@ -11,6 +11,7 @@ const { signJwt, verifyJwt } = require("../util/jwt");
 const bcrypt = require("bcrypt");
 const lodash = require("lodash");
 const sendMail = require("../util/nodemailer");
+const passport = require("passport");
 
 exports.register = async (req, res, next) => {
   try {
@@ -91,6 +92,23 @@ exports.login = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+exports.googleGet = (req, res, next) => {
+  passport.authenticate("google", {
+    scope: ["email", "profile"],
+  })(req, res, next);
+};
+
+exports.googleAuthenticate = (req, res, next) => {
+  passport.authenticate("google", {
+    failureRedirect: "/",
+  })(req, res, function () {
+    if (!req.user) {
+      return res.status(400).json({ error: "Authentication failed" });
+    }
+    return res.status(200).json(req.user);
+  });
 };
 
 exports.getCurrentUser = async (req, res) => {
@@ -185,3 +203,4 @@ exports.updateUser = async (req, res, next) => {
     next(err);
   }
 };
+
