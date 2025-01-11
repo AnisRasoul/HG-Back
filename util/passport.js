@@ -14,8 +14,6 @@ passport.use(
     async (req, accessToken, refreshToken, profile, done) => {
       try {
         const user = await User.findOrCreate(profile);
-        console.log(profile, 'authenticated');
-        
         return done(null, user);
       } catch (error) {
         return done(error, null);

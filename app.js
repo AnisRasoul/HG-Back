@@ -33,7 +33,7 @@ mongoose
   });
 
 app.get("/", (req, res) => {
-  res.send("<a href='/oauth'>Login with Google</a>");
+  res.send("<a href='/google/login'>Login with Google</a>");
 });
 
 app.use(auth);

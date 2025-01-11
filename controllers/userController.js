@@ -107,7 +107,22 @@ exports.googleAuthenticate = (req, res, next) => {
     if (!req.user) {
       return res.status(400).json({ error: "Authentication failed" });
     }
-    return res.status(200).json(req.user);
+    
+    // Create a user object without sensitive data
+    const userWithoutSensitive = {
+      _id: req.user._id,
+      username: req.user.username,
+      email: req.user.email,
+
+      // Add other non-sensitive fields you want to include
+    };
+    
+    // Generate JWT token
+    const token = signJwt(userWithoutSensitive);
+    console.log("Token:", userWithoutSensitive, token);
+    
+    // Redirect to frontend with token
+    return res.redirect(`http://localhost:5173/login?token=${token}`);
   });
 };
 
